@@ -31,13 +31,13 @@ namespace Keyboard_Locker
         public delegate int HookHandlerDelegate(int nCode, IntPtr wparam, ref KBDLLHOOKSTRUCT lparam);
 
         private static readonly string LockString = "Lock";
-        private static readonly string UnLockString = "UnLock";
+        private static readonly string UnlockString = "Unlock";
         private static readonly Color RedColor = Color.FromKnownColor(KnownColor.OrangeRed);
         private static readonly Color GreenColor = Color.FromKnownColor(KnownColor.ForestGreen);
-        private static readonly string StateMsgString = "Keyboard now is 「{0}」";
+        private static readonly string StateMsgString = "Keyboard state changed to [{0}]";
         private static readonly string BackgroundMsgString = "Background running.";
 
-        private static readonly List<int> ExceptionKeyCodeList = new List<int>{ 20 };
+        private static readonly List<int> ExceptionKeyCodeList = new List<int>{ }; // VK_INSERT
         private static readonly int ExceptionKeyComboCount = 3;
         private static readonly int ExceptionKeyComboMilliseconds = 1000;
         private int m_CurrentExceptionKeyClickCount = 0;
@@ -48,7 +48,7 @@ namespace Keyboard_Locker
 
         private int HookCallback(int nCode, IntPtr wparam, ref KBDLLHOOKSTRUCT lparam)
         {
-            if (nCode >= 0 && ExceptionKeyCodeList.Contains(lparam.vkCode) )
+             if (nCode >= 0 && ExceptionKeyCodeList.Contains(lparam.vkCode) )
             {
                 m_CurrentExceptionKeyClickCount++;
                 if (m_CurrentExceptionKeyClickCount == 2)
@@ -89,11 +89,11 @@ namespace Keyboard_Locker
         private void MainButton_Click(object sender, MouseEventArgs e)
         {
             m_IsLock = !m_IsLock;
-            MainButton.Text = m_IsLock ? UnLockString : LockString;
+            MainButton.Text = m_IsLock ? UnlockString : LockString;
             MainButton.BackColor = m_IsLock ? GreenColor : RedColor;
 
             NotifyIcon1.ShowBalloonTip(0, this.Text,
-                    string.Format(StateMsgString, m_IsLock ? LockString : UnLockString),
+                    string.Format(StateMsgString, m_IsLock ? LockString : UnlockString),
                     ToolTipIcon.Info);
 
             System.GC.Collect();
@@ -135,7 +135,7 @@ namespace Keyboard_Locker
 
         private void ContextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            LockToolStripMenuItem.Text = m_IsLock ? UnLockString : LockString;
+            LockToolStripMenuItem.Text = m_IsLock ? UnlockString : LockString;
         }
 
         private void ShowForm()
